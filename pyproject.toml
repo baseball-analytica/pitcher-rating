@@ -1,5 +1,5 @@
 [project]
-name = "pitcher-rating"
+name = "pitcher_rating"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
@@ -9,8 +9,11 @@ dependencies = [
     "matplotlib>=3.10.8",
     "numpy>=2.3.5",
     "pandas>=2.3.3",
-    "pybaseball>=2.2.7",
+    "pybaseball",
 ]
+
+[tool.uv.sources]
+httpx = { git = "https://github.com/jldbc/pybaseball", branch = "master" }
 
 [project.scripts]
 rate = "pitcher_rating.main:main"
@@ -18,6 +21,12 @@ rate = "pitcher_rating.main:main"
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+    "mypy>=1.19.1",
+    "ruff>=0.14.9",
+]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/pitcher_rating"]
