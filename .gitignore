@@ -209,3 +209,4 @@ __marimo__/
 # pitcher_rating
 .output/
 .logs/
+.figures/

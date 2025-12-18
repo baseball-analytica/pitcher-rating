@@ -24,7 +24,8 @@ def main() -> None:
 
     pitchers_p = subparser.add_parser(
         "pitchers",
-        help="obtain pitcher ratings for all pitchers in the given season"
+        help="obtain pitcher ratings for all pitchers in the given season",
+        epilog=parser.epilog
     )
     pitchers_p.add_argument(
         "season",
@@ -37,6 +38,13 @@ def main() -> None:
         type=int,
         required=False,
         help="include all data through this season"
+    )
+    pitchers_p.add_argument(
+        "-q",
+        "--min-pa",
+        type=float,
+        required=False,
+        help="specify a minimum number of plate appearances for each pitcher-season (default = qualified)"
     )
     pitchers_p.add_argument(
         "-a",
@@ -57,11 +65,18 @@ def main() -> None:
         action="store_true",
         help="save the resulting data to a file"
     )
+    pitchers_p.add_argument(
+        "-c",
+        "--chart",
+        action="store_true",
+        help="generate a matplotlib figure and save to a file"
+    )
     pitchers_p.set_defaults(func=api.print_season_pitchers)
 
     teams_p = subparser.add_parser(
         "teams",
-        help="obtain pitcher ratings for all teams in the given season"
+        help="obtain pitcher ratings for all teams in the given season",
+        epilog=parser.epilog
     )
     teams_p.add_argument(
         "season",
@@ -94,11 +109,18 @@ def main() -> None:
         action="store_true",
         help="save the resulting data to a file"
     )
+    teams_p.add_argument(
+        "-c",
+        "--chart",
+        action="store_true",
+        help="generate a matplotlib figure and save to a file"
+    )
     teams_p.set_defaults(func=api.print_season_teams)
 
     seasons_p = subparser.add_parser(
         "seasons",
-        help="obtain league-average pitcher ratings in the given range of seasons"
+        help="obtain league-average pitcher ratings in the given range of seasons",
+        epilog=parser.epilog
     )
     seasons_p.add_argument(
         "start",
@@ -115,6 +137,12 @@ def main() -> None:
         "--output",
         action="store_true",
         help="save the resulting data to a file"
+    )
+    seasons_p.add_argument(
+        "-c",
+        "--chart",
+        action="store_true",
+        help="generate a matplotlib figure and save to a file"
     )
     seasons_p.set_defaults(func=api.print_seasons)
 
