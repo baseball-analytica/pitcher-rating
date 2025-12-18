@@ -1,8 +1,10 @@
 import argparse
+import logging
 
-from pybaseball import cache
+from pybaseball import cache # type: ignore
 
 from . import api
+from .logger import init_logger
 
 
 def main() -> None:
@@ -11,6 +13,12 @@ def main() -> None:
     parser = argparse.ArgumentParser(
         description="calculate pitcher ratings for MLB pitchers",
         epilog="report any bugs to akline at baseball-analytica dot com"
+    )
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        action="store_true",
+        help="enable logging"
     )
     subparser = parser.add_subparsers()
 
@@ -24,6 +32,13 @@ def main() -> None:
         help="the year of the MLB season"
     )
     pitchers_p.add_argument(
+        "-t",
+        "--through",
+        type=int,
+        required=False,
+        help="include all data through this season"
+    )
+    pitchers_p.add_argument(
         "-a",
         "--ascending",
         action="store_true",
@@ -34,7 +49,7 @@ def main() -> None:
         "--limit",
         type=int,
         default=20,
-        help="the number of pitchers to include"
+        help="the number of pitcher-seasons to include"
     )
     pitchers_p.add_argument(
         "-o",
@@ -54,10 +69,24 @@ def main() -> None:
         help="the year of the MLB season"
     )
     teams_p.add_argument(
+        "-t",
+        "--through",
+        type=int,
+        required=False,
+        help="include all data through this season"
+    )
+    teams_p.add_argument(
         "-a",
         "--ascending",
         action="store_true",
         help="order the data from lowest to highest rating"
+    )
+    teams_p.add_argument(
+        "-l",
+        "--limit",
+        type=int,
+        default=30,
+        help="the number of team-seasons to include"
     )
     teams_p.add_argument(
         "-o",
@@ -89,9 +118,15 @@ def main() -> None:
     )
     seasons_p.set_defaults(func=api.print_seasons)
 
+    try:
+        args = parser.parse_args()
 
-    args = parser.parse_args()
-    args.func(args)
+        log_level = logging.DEBUG if args.verbose else logging.CRITICAL
+        init_logger(log_level)
+
+        args.func(args)
+    except Exception as e:
+        print(f"error: {e}")
 
 
 if __name__ == "__main__":
